@@ -43,15 +43,11 @@ public class Test4 {
 
         // TODO Auto-generated catch block
         try {
-            //�ж��ļ��Ƿ����
             if(!file.exists()){
                 file.createNewFile();
             }
 
-            //writer��ʼ��
             writer = new BufferedWriter(new FileWriter(file));
-
-            //��������
             for(int i = 0; i < 5; i++){
                 String str = scan.next();
                 String[] inputData = str.split("#");
@@ -61,7 +57,6 @@ public class Test4 {
                 stu[i] = new Student(inputData[0], score1, score2, score3);
             }
 
-            //����ѧ���ĳɼ��ܺ�����
             Arrays.sort(stu, new Comparator<Student>() {
 
                 @Override
@@ -75,7 +70,6 @@ public class Test4 {
                 }
             });
 
-            //�����ݴ����ļ�
             for(int i = 0; i < 5; i++){
                 writer.write(stu[i].toString());
                 writer.newLine();
