@@ -6,6 +6,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Random;
 import java.util.Scanner;
 
 public class Test4 {
@@ -38,9 +39,11 @@ public class Test4 {
     public static void main(String[] args) {
         Student[] stu = new Student[5];
         Scanner scan = new Scanner(System.in);
-        File file = new File("src/file/stu.txt");
+        File file = new File("file/stu.txt");
         BufferedWriter writer;
-
+        Random random = new Random();
+        int v = random.nextInt(10);
+        System.out.println("Next int value:"+v);
         // TODO Auto-generated catch block
         try {
             if(!file.exists()){
