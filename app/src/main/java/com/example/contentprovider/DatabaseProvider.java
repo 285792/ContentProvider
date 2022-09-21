@@ -7,6 +7,11 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.view.View;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DatabaseProvider extends ContentProvider {
 

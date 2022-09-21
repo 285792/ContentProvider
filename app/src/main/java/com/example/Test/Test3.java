@@ -11,6 +11,5 @@ public class Test3 {
         int intMsg = 7;
         list.add((Object)strMsg);
         list.add((Object)intMsg);
-        System.out.println(list.toString());
     }
 }
