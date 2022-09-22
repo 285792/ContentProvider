@@ -2,33 +2,29 @@
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.ContentValues;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.SystemClock;
-import android.util.Log;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.widget.Button;
+
+
+import android.util.Log;
 import android.widget.EditText;
-import android.widget.TimePicker;
 import android.widget.Toast;
-
-import com.example.camera.CameraActivity;
-
+import android.app.AlertDialog;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.os.SystemClock;
 
- public class MainActivity<intArr> extends AppCompatActivity {
+ public class MainActivity extends AppCompatActivity {
 
     private String newId;
     @Override
@@ -95,28 +91,20 @@ import java.util.List;
      private boolean flag = false;
      private static final String PASS1="1a";
      private static final String PASS2="2b";
-     final static int COUNTS = 4;// 点击次数
-     final static int DURATION = 4000;// 规定有效时间
+     final static int COUNTS = 100;// 点击次数
+     final static int DURATION = 3000;// 规定有效时间
      final static int KEYCODE_VOLUME_DOWN = 25;
      final static long KEYCODE_VOLUME_UP = 24;
-     private List<Integer> mList = new ArrayList<>(COUNTS);
-     private List<Integer> passList = new ArrayList<>(Arrays.asList(25,25,24,25));
+     private List<Integer> mList = new ArrayList<>();
+     Object[] pass = new Object[]{25,25,24,25};
      long[] mHits = new long[COUNTS];
 
      @Override
      public boolean onKeyDown(int keyCode, KeyEvent event) {
-         Log.e("yulu",event.toString());
+         Log.e("yulu", "keycode : "+String.valueOf(keyCode));
          if(event.getAction() == KeyEvent.ACTION_DOWN){
+//             hahahha(event);
              continuousClick(event);
-//             if (keyCode == KEYCODE_VOLUME_DOWN) {
-//                 Log.e("yulu","down");
-//                 flag = true;
-//                 return true;
-//             }
-//             if(flag){
-//                 Log.e("yulu","flag : "+String.valueOf(flag));
-//                 continuousClick(event);
-//             }
          }
 
          return super.onKeyDown(keyCode, event);
@@ -124,32 +112,57 @@ import java.util.List;
 
      //判断快速按键
      private void continuousClick(KeyEvent event) {
-         Log.e("yulu","==========continuousClick=======");
-
-         if( mList.size() <= 3){
-             mList.add(event.getKeyCode());
-         }
+         int index = mList.size();
+         mList.add(event.getKeyCode());
+         Boolean contain = false;
+         //为数组赋值
+         mHits[index] = SystemClock.uptimeMillis();
          Log.e("yulu","mlist : "+mList.toString());
-         Log.e("yulu","passList : "+passList.toString());
-         //每次点击时，数组向前移动一位
-         System.arraycopy(mHits, 1, mHits, 0, mHits.length - 1);
-         //为数组最后一位赋值
-         mHits[mHits.length - 1] = SystemClock.uptimeMillis();
-         Log.e("yulu","mHits[0] : "+mHits[0]);
-         Log.e("yulu","time : "+String.valueOf((SystemClock.uptimeMillis() - DURATION)));
-         Log.e("yulu","mHits size : "+mHits.length);
-         if (mHits[0] >= (SystemClock.uptimeMillis() - DURATION)) {
-             if(mList.equals(passList)){
-                 normalDialog(this);
+         if(mList.size()>3){
+             Object[] list = mList.toArray();
+             for(int a=0;a<mList.size();a++){
+                 System.out.println(list[a]);
+             }
+             if (mHits[index]-mHits[index-3] < DURATION) {
+                 for(int i=mList.size()-1; i>=mList.size()-4;i--){
+                     Log.e("yulu","list[i] : "+String.valueOf(list[i]));
+                     Log.e("yulu","pass[j] : "+String.valueOf(pass[i-(mList.size()-4)]));
+                     contain= list[i] == pass[i-mList.size()+4];
+                 }
+                 if(contain){
+                     normalDialog(this);
+                     //重新初始化数据
+                     mList = new ArrayList<>();
+                     mHits = new long[COUNTS];
+                 }
+             }else {
+                 Toast.makeText(this,"超时", Toast.LENGTH_SHORT).show();
+             }
+         }
+     }
+
+     //test
+     private void hahahha(KeyEvent event) {
+         Log.e("yulu","==========continuousClick=======");
+         int index = mList.size();
+         Log.e("yulu","index: "+index);
+         mList.add(event.getKeyCode());
+         //为数组赋值
+         mHits[index] = SystemClock.uptimeMillis();
+         Log.e("yulu","mlist : "+mList.toString());
+         //containsAll只能判断是否包含pass中的元素 无关顺序与数量 不能作为判断条件
+         if(mList.size()>3 && mList.containsAll(Arrays.asList(pass))){
+             if (mHits[index]-mHits[index-3] < DURATION) {
+                 Log.e("yulu","使用时间: "+String.valueOf(mHits[index]-mHits[index-3]) );
+                     normalDialog(this);
+                     //重新初始化数据
+                     mList = new ArrayList<>(COUNTS);
+                     mHits = new long[COUNTS];
+             }else {
                  //重新初始化数据
                  mList = new ArrayList<>(COUNTS);
                  mHits = new long[COUNTS];
-                 flag=false;
              }
-         }else if(mHits[0]!=0 && mHits[0] < (SystemClock.uptimeMillis() - DURATION)){
-             //重新初始化数据
-             mList = new ArrayList<>(COUNTS);
-             mHits = new long[COUNTS];
          }
      }
 
