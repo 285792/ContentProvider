@@ -128,8 +128,12 @@ import android.os.SystemClock;
                      Log.e("yulu","list[i] : "+String.valueOf(list[i]));
                      Log.e("yulu","pass[j] : "+String.valueOf(pass[i-(mList.size()-4)]));
                      contain= list[i] == pass[i-mList.size()+4];
+                     if (!contain){
+                         break;
+                     }
                  }
                  if(contain){
+                     Log.e("yulu","==========弹出对话框=======");
                      normalDialog(this);
                      //重新初始化数据
                      mList = new ArrayList<>();
